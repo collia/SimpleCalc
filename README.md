@@ -1,0 +1,4 @@
+SimpleCalc
+==========
+
+Simple string calculator. 
