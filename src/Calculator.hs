@@ -154,3 +154,7 @@ mainTest = do
 
 calculateLine :: String -> NumberType
 calculateLine command = (calcTree .  dividedCommandToTree EmptyTree . fst . groupDividedCommand [] . divideTextLine []) command
+
+
+
+
