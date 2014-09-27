@@ -12,9 +12,9 @@ module Calculator (
 
 --import Data.Functor
 --import Control.Applicative
---import Control.Monad 
+import Control.Monad 
 --import System.IO
---import Control.Monad.Writer.Lazy
+import Control.Monad.Writer.Lazy
 import Data.Char
 --import Control.Monad.Writer.Lazy
 
@@ -25,7 +25,7 @@ import Data.Typeable
 
 type NumberType = Double
 type CalculatingErrorMessage = String
-
+type LoggingMessage =  String
 
 data InvalidCommand = InvalidCommand CalculatingErrorMessage deriving (Show, Typeable)
 
@@ -104,9 +104,10 @@ stringToOperation a
 
 groupDividedCommand :: [Subtree (DividedContent String)] ->  [DividedContent String] -> ([ Subtree (DividedContent String)], [DividedContent String] )
 groupDividedCommand tree (Sign "(" :other) = let result = (groupDividedCommand [] other)
-                                                 parent = fst result
-                                                 nextStep = snd result in
-                                             (fst $ groupDividedCommand (tree ++ [SubtreeParent parent]) nextStep, nextStep)
+                                                 parent =  fst result
+                                                 nextStep = snd result 
+                                                 result2 = (groupDividedCommand (tree ++ [SubtreeParent parent]) nextStep)  in
+                                             (fst result2 , snd result2)
 groupDividedCommand tree (Sign ")" :other) = (tree, other)
 groupDividedCommand tree (Null :other) = let result = (groupDividedCommand tree other)
                                              parent = fst result
@@ -132,6 +133,7 @@ dividedCommandToTree (Oper a left right)     ((SubtreeElem (Sign s     )): other
                                                          (dividedCommandToTree (Oper (stringToOperation s) (Oper a  left right) EmptyTree) other)
 dividedCommandToTree res [] = res
 dividedCommandToTree EmptyTree ((SubtreeParent commands): (SubtreeElem (Sign s) ): other) = dividedCommandToTree (Oper (stringToOperation s) (dividedCommandToTree EmptyTree commands) EmptyTree) other 
+dividedCommandToTree EmptyTree [(SubtreeParent commands)] = (dividedCommandToTree EmptyTree commands)
 dividedCommandToTree (Oper a left EmptyTree) ((SubtreeParent commands): other) = dividedCommandToTree (Oper a left  (dividedCommandToTree EmptyTree commands)) other
 dividedCommandToTree (Oper a EmptyTree right) ((SubtreeParent commands): other) = dividedCommandToTree (Oper a (dividedCommandToTree EmptyTree commands) right) other
 
@@ -145,6 +147,8 @@ dividedCommandToTreeTest = do
                            print $  divideTextLine  [] "(((3+4)*3+2)*2+1)*3"
                            print $  (  groupDividedCommand [] . divideTextLine  []) "(((3+4)*3+2)*2+1)*3"
                            print $  (  dividedCommandToTree EmptyTree . fst . groupDividedCommand [] . divideTextLine  []) "(((3+4)*3+2)*2+1)*3"
+                           print $  (   fst . groupDividedCommand [] . divideTextLine  []) "(3+4)"
+                           print $  (  dividedCommandToTree EmptyTree . fst . groupDividedCommand [] . divideTextLine  []) "(3+4)"
 
 mainTest = do
          print $ (calcTree . dividedCommandToTree EmptyTree . fst . groupDividedCommand [] . divideTextLine []) "1+2"
@@ -154,7 +158,5 @@ mainTest = do
 
 calculateLine :: String -> NumberType
 calculateLine command = (calcTree .  dividedCommandToTree EmptyTree . fst . groupDividedCommand [] . divideTextLine []) command
-
-
 
 

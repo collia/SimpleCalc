@@ -189,9 +189,24 @@ parenthesesTest6 = assertEqual "Check () only"
                    7
                    (calculateLine "(3+4)")
 
+parenthesesTest7 :: Assertion
+parenthesesTest7 = assertEqual "Check ()() only"
+                   77
+                   (calculateLine "(3+4)*(5+6)")
+
+parenthesesTest8 :: Assertion
+parenthesesTest8 = assertEqual "Check (()()) only"
+                   (18*4)
+                   (calculateLine "2 * ((3+4)+(5+6)) * 2")
+
+parenthesesTest9 :: Assertion
+parenthesesTest9 = assertEqual "Check () only 2"
+                   (-1)
+                   (calculateLine "(-1)")
 
 parenthesesTests = [testCase "parenthesesTest1" parenthesesTest1, testCase "parenthesesTest2" parenthesesTest2, testCase "parenthesesTest3" parenthesesTest3,
-                    testCase "parenthesesTest4" parenthesesTest4, testCase "parenthesesTest5" parenthesesTest5, testCase "parenthesesTest6" parenthesesTest6]
+                    testCase "parenthesesTest4" parenthesesTest4, testCase "parenthesesTest5" parenthesesTest5, testCase "parenthesesTest6" parenthesesTest6,
+                    testCase "parenthesesTest7" parenthesesTest7, testCase "parenthesesTest8" parenthesesTest8, testCase "parenthesesTest9" parenthesesTest9]
 
 main :: IO ()
 main = defaultMain  (simpleTests ++ priorityTests ++ parenthesesTests)
