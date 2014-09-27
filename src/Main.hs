@@ -10,19 +10,24 @@ import Control.Exception
 
 import Calculator
 
-calculate :: String -> IO String
+{-calculate :: String -> IO String
 calculate x = 
-          return (show $ calculateLine x) `Control.Exception.catch` possibleErrors
+          (show $ eval $ calculateLine x) `Control.Exception.catch` possibleErrors
           where 
                 possibleErrors :: InvalidCommand -> IO String
                 possibleErrors  error = return $ "Error happens: " ++ show error
-
+-}
 mainLoop :: IO()
 mainLoop = forever $ do
     hSetBuffering stdout NoBuffering
     command <- putStr "> " *> getLine 
-    result <- calculate command
-    putStrLn $ result
+   -- result <- calculate command
+   -- putStrLn $ result
+    result <- try $ evaluate $ calculateLine command
+                    :: IO (Either InvalidCommand NumberType)
+    case result of
+        Left exception -> putStrLn $ "Fault: " ++ show exception
+        Right value -> print value
  
  
  
