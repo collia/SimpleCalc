@@ -242,11 +242,18 @@ negativeTest6 = assertEqual "Check neg ()"
 negativeTests = [testCase "negativeTest1" negativeTest1, testCase "negativeTest2" negativeTest2, testCase "negativeTest3" negativeTest3,
                  testCase "negativeTest4" negativeTest4, testCase "negativeTest5" negativeTest5, testCase "negativeTest6" negativeTest6]
 
---exceptionTest1 :: Asseption
---exceptionTest1 = try 
+exceptionTest1 :: Assertion
+exceptionTest1 = do
+               result <- try $ evaluate $ calculateLine "1/0"
+                    :: IO (Either InvalidCommand NumberType)
+               case result of
+                    Left exception -> assertBool (show exception) True
+                    Right value -> assertFailure "No exception"
+
+exceptionTests = [testCase "exceptionTest1" exceptionTest1]
 
 main :: IO ()
 main = do
-     defaultMain ( simpleTests ++ priorityTests ++ parenthesesTests ++ negativeTests)
+     defaultMain ( simpleTests ++ priorityTests ++ parenthesesTests ++ negativeTests ++ exceptionTests)
        
        
