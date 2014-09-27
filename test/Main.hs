@@ -208,7 +208,41 @@ parenthesesTests = [testCase "parenthesesTest1" parenthesesTest1, testCase "pare
                     testCase "parenthesesTest4" parenthesesTest4, testCase "parenthesesTest5" parenthesesTest5, testCase "parenthesesTest6" parenthesesTest6,
                     testCase "parenthesesTest7" parenthesesTest7, testCase "parenthesesTest8" parenthesesTest8, testCase "parenthesesTest9" parenthesesTest9]
 
+negativeTest1 :: Assertion
+negativeTest1 = assertEqual "Check -1"
+                   (-1)
+                   (calculateLine "-1")
+
+negativeTest2 :: Assertion
+negativeTest2 = assertEqual "Check neg +"
+                   (-1)
+                   (calculateLine "-3+2")
+
+negativeTest3 :: Assertion
+negativeTest3 = assertEqual "Check neg -"
+                   (-5)
+                   (calculateLine "0-3-2")
+
+negativeTest4 :: Assertion
+negativeTest4 = assertEqual "Check neg *"
+                   (-6)
+                   (calculateLine "-3*2")
+
+negativeTest5 :: Assertion
+negativeTest5 = assertEqual "Check neg /"
+                   (-3)
+                   (calculateLine "-6/2")
+
+negativeTest6 :: Assertion
+negativeTest6 = assertEqual "Check neg ()"
+                   (-1)
+                   (calculateLine "-(3-2)")
+
+negativeTests = [testCase "negativeTest1" negativeTest1, testCase "negativeTest2" negativeTest2, testCase "negativeTest3" negativeTest3,
+                 testCase "negativeTest4" negativeTest4, testCase "negativeTest5" negativeTest5, testCase "negativeTest6" negativeTest6]
+
 main :: IO ()
-main = defaultMain  (simpleTests ++ priorityTests ++ parenthesesTests)
+main = do
+     defaultMain ( simpleTests ++ priorityTests ++ parenthesesTests ++ negativeTests)
        
        

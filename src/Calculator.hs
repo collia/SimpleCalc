@@ -25,24 +25,23 @@ import Data.Typeable
 
 type NumberType = Double
 type CalculatingErrorMessage = String
-type LoggingMessage =  String
+--type LoggingMessage =  String
 
 data InvalidCommand = InvalidCommand CalculatingErrorMessage deriving (Show, Typeable)
 
 instance Exception InvalidCommand
 
-data Operation =NullOper | Plus | Minus  | Multiply |  Dividion  deriving(Show, Eq, Ord)
+data Operation =  Plus | Minus  | Multiply |  Dividion  deriving(Show, Eq, Ord)
+--data Operation =   Minus  | Plus | Multiply |  Dividion  deriving(Show, Eq, Ord)
 data Num value => OperTree value = Data value | Oper Operation  (OperTree value) (OperTree value) | EmptyTree
                                    deriving (Show)
---data DividedContent a = Var a | Num a | Sign a | Error a | Null  deriving (Show)
 data DividedContent a = Var a | Num a | Sign a |  Null  deriving (Show)
 data Subtree a = SubtreeElem a | SubtreeParent [Subtree a] deriving(Show)
 
 
 
---calcTree :: (Fractional, Eq value) => OperTree value ->  value
 calcTree :: OperTree NumberType ->  NumberType
-calcTree (Oper Dividion left (Data 0.0)) = throw $ InvalidCommand "Divide by zero"
+calcTree (Oper Dividion left (Data 0.0)) = throw $ InvalidCommand "Divide on zero"
 calcTree (Oper oper left right) =
          case oper of
               Multiply  -> calcTree left * calcTree right
@@ -123,7 +122,7 @@ groupDividedCommand tree [] = (tree, [])
 
 dividedCommandToTree ::  OperTree NumberType -> [Subtree (DividedContent String)] -> OperTree NumberType
 dividedCommandToTree EmptyTree ((SubtreeElem (Num command)): other) = dividedCommandToTree (Data (read command :: NumberType)) other 
-dividedCommandToTree EmptyTree ((SubtreeElem (Sign "-"   )): other) = (Oper Minus (Data 0) (dividedCommandToTree (EmptyTree) other))
+dividedCommandToTree EmptyTree ((SubtreeElem (Sign "-"   )): other) = dividedCommandToTree (Oper Minus (Data 0) (EmptyTree)) other --(Oper Minus (Data 0) (dividedCommandToTree (EmptyTree) other))
 dividedCommandToTree (Data a)  ((SubtreeElem (Sign s     )): other) =  (dividedCommandToTree (Oper (stringToOperation s)  (Data a) (EmptyTree)) other)
 dividedCommandToTree (Oper a left EmptyTree) ((SubtreeElem (Num command)): other) = dividedCommandToTree (Oper a left (Data (read command :: NumberType))) other
 dividedCommandToTree (Oper a left right)     ((SubtreeElem (Sign s     )): other) =
@@ -140,15 +139,16 @@ dividedCommandToTree (Oper a EmptyTree right) ((SubtreeParent commands): other) 
 
 
 dividedCommandToTreeTest = do
-                           --print $  groupDividedCommand (divideTextLine "1 - 2 * (3+4)" []) []
-                           --print $  groupDividedCommand (divideTextLine "1 - (2*3)" []) []
-                           --print $  groupDividedCommand (divideTextLine "22+22 - (2*3) + 11" []) []
-                          -- print $  dividedCommandToTree (fst $ groupDividedCommand (divideTextLine "22+22 - (2*3) + 11" []) []) EmptyTree
-                           print $  divideTextLine  [] "(((3+4)*3+2)*2+1)*3"
-                           print $  (  groupDividedCommand [] . divideTextLine  []) "(((3+4)*3+2)*2+1)*3"
-                           print $  (  dividedCommandToTree EmptyTree . fst . groupDividedCommand [] . divideTextLine  []) "(((3+4)*3+2)*2+1)*3"
-                           print $  (   fst . groupDividedCommand [] . divideTextLine  []) "(3+4)"
-                           print $  (  dividedCommandToTree EmptyTree . fst . groupDividedCommand [] . divideTextLine  []) "(3+4)"
+                           --print $  divideTextLine  [] "(((3+4)*3+2)*2+1)*3"
+                           --print $  (  groupDividedCommand [] . divideTextLine  []) "(((3+4)*3+2)*2+1)*3"
+                           --print $  (  dividedCommandToTree EmptyTree . fst . groupDividedCommand [] . divideTextLine  []) "(((3+4)*3+2)*2+1)*3"
+                           --print $  (   fst . groupDividedCommand [] . divideTextLine  []) "(3+4)"
+                           --print $  (  dividedCommandToTree EmptyTree . fst . groupDividedCommand [] . divideTextLine  []) "(3+4)"
+                           print $ show $ Plus > Minus
+                           print $  (  groupDividedCommand [] . divideTextLine  []) "0-3+4"
+                           print $  (  groupDividedCommand [] . divideTextLine  []) "-3+4"
+                           print $  (  dividedCommandToTree EmptyTree . fst . groupDividedCommand [] . divideTextLine  []) "0-3+4"
+                           print $  (  dividedCommandToTree EmptyTree . fst . groupDividedCommand [] . divideTextLine  []) "-3+4"
 
 mainTest = do
          print $ (calcTree . dividedCommandToTree EmptyTree . fst . groupDividedCommand [] . divideTextLine []) "1+2"
