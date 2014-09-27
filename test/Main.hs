@@ -2,6 +2,7 @@
 import Test.HUnit
 import Test.Framework
 import Test.Framework.Providers.HUnit
+import Control.Exception
 
 import Calculator
 
@@ -240,6 +241,9 @@ negativeTest6 = assertEqual "Check neg ()"
 
 negativeTests = [testCase "negativeTest1" negativeTest1, testCase "negativeTest2" negativeTest2, testCase "negativeTest3" negativeTest3,
                  testCase "negativeTest4" negativeTest4, testCase "negativeTest5" negativeTest5, testCase "negativeTest6" negativeTest6]
+
+--exceptionTest1 :: Asseption
+--exceptionTest1 = try 
 
 main :: IO ()
 main = do
