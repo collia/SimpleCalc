@@ -11,14 +11,12 @@ module Calculator (
        mainTest
 ) where
 
---import Data.Functor
---import Control.Applicative
+import Data.Functor
+import Control.Applicative
 import Control.Monad 
 --import System.IO
 import Control.Monad.Writer.Lazy
 import Data.Char
---import Control.Monad.Writer.Lazy
-
 import Control.Exception
 --import Data.String.Utils
 import Data.Typeable
@@ -33,7 +31,6 @@ data InvalidCommand = InvalidCommand CalculatingErrorMessage deriving (Show, Typ
 instance Exception InvalidCommand
 
 data Operation =  Plus | Minus  | Multiply |  Dividion  deriving(Show, Eq, Ord)
---data Operation =   Minus  | Plus | Multiply |  Dividion  deriving(Show, Eq, Ord)
 data Num value => OperTree value = Data value | Oper Operation  (OperTree value) (OperTree value) | EmptyTree
                                    deriving (Show)
 data DividedContent a = Var a | Num a | Sign a |  Null  deriving (Show)
@@ -41,15 +38,16 @@ data Subtree a = SubtreeElem a | SubtreeParent [Subtree a] deriving(Show)
 
 
 
-calcTree :: OperTree NumberType ->  NumberType
+calcTree :: OperTree NumberType -> Maybe NumberType
 calcTree (Oper Dividion left (Data 0.0)) = throw $ InvalidCommand "Divide on zero"
 calcTree (Oper oper left right) =
          case oper of
-              Multiply  -> calcTree left * calcTree right
-              Dividion  -> calcTree left / calcTree right
-              Plus  -> calcTree left + calcTree right
-              Minus  -> calcTree left - calcTree right
-calcTree (Data value) = value
+              Multiply  -> (\x y -> x*y) <$> calcTree left <*> calcTree right
+              Dividion  -> (\x y -> x/y) <$> calcTree left <*> calcTree right
+              Plus      -> (\x y -> x+y) <$> calcTree left <*> calcTree right
+              Minus     -> (\x y -> x-y) <$> calcTree left <*> calcTree right
+calcTree (Data value) = Just value
+calcTree EmptyTree = Nothing
 
 calcTreeTest =         do
         print $  Oper Plus (Data 1) (Data 2)
@@ -158,7 +156,7 @@ mainTest = do
 
 
 
-calculateLine :: String -> NumberType
+calculateLine :: String -> Maybe NumberType
 calculateLine command = (calcTree .  dividedCommandToTree EmptyTree . fst . groupDividedCommand [] . divideTextLine []) command
 
 
