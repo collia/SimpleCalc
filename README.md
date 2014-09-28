@@ -7,13 +7,14 @@ Does't work yet
 
 For build run:
 
-cabal configure --enable-tests
-cabal build
+`cabal configure --enable-tests`
 
-for running tests:
-cabal test
+`cabal build`
+
+for start testing:
+`cabal test`
 
 for running program:
-./dist/build/calc/calc 
+`./dist/build/calc/calc `
 
 
