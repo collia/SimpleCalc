@@ -30,12 +30,6 @@ mainLoop = forever $ do
         Right (Just value) -> print value
         Right Nothing -> putStrLn ""
  
-testMaybe :: Int -> Maybe Int
-testMaybe 0 = Nothing
-testMaybe 1 = Just 1
-testMaybe 100 = Just 100
-testMaybe x = (\x y -> x+y) <$> testMaybe ( (x - 1) ) <*> testMaybe ( (x + 1) )
-
 
 main :: IO()
 main = 
@@ -44,6 +38,6 @@ main =
     -- divideTextLineTest
      --dividedCommandToTreeTest
     --mainTest
-    --print $ testMaybe 2
+    
 
 
