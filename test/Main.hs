@@ -279,8 +279,29 @@ exceptionTest4 = do
 exceptionTests = [testCase "exceptionTest1" exceptionTest1, testCase "exceptionTest2" exceptionTest2, testCase "exceptionTest3" exceptionTest3, 
                   testCase "exceptionTest4" exceptionTest4]
 
+fractionalTest1 = assertEqual "1.5 + 1.5"
+                   (Just 3)
+                   (calculateLine "1.5 + 1.5")
+fractionalTest2 = assertEqual "1.9 - 0.2"
+                   (Just 1.7)
+                   (calculateLine "1.9 - 0.2")
+fractionalTest3 = assertEqual "1.5 * 1.5"
+                   (Just 2.25)
+                   (calculateLine "1.5 * 1.5")
+fractionalTest4 = assertEqual "2.25 / 1.5"
+                   (Just 1.5)
+                   (calculateLine "2.25 / 1.5")
+fractionalTest5 = assertEqual "1.5 * (1 + 0.5)"
+                   (Just 2.25)
+                   (calculateLine "1.5 * (1 + 0.5")
+fractionalTest6 = assertEqual "1.5 * (-1.5)"
+                   (Just (-2.25))
+                   (calculateLine "1.5 * (-1.5)")
+fractionalTests = [testCase "fractionalTest1" fractionalTest1, testCase "fractionalTest2" fractionalTest2, testCase "fractionalTest3" fractionalTest3,
+                   testCase "fractionalTest4" fractionalTest4, testCase "fractionalTest5" fractionalTest5, testCase "fractionalTest6" fractionalTest6]
+
 main :: IO ()
 main = do
-     defaultMain ( simpleTests ++ priorityTests ++ parenthesesTests ++ negativeTests ++ exceptionTests)
+     defaultMain ( simpleTests ++ priorityTests ++ parenthesesTests ++ negativeTests ++ exceptionTests ++ fractionalTests)
        
        

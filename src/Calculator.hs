@@ -61,19 +61,16 @@ infixr 5  .++
 Var var .++ Var ys = Var (var ++ ys )
 Num var .++ Num ys = Num (var ++ ys )
 Sign var .++ Sign ys =Sign ( var ++ ys ) 
--- Error var .++ Error ys =Error ( var ++ ys ) 
--- Error var .++ _ =Error  var  
--- _ .++ Error var =Error  var  
 Null .++ ys = ys
 ys .++ Null = ys
 a .++ b = throw $ InvalidCommand ("Can't concate: " ++ (show a) ++ " and " ++ (show b) )
--- Error "Incorrect Concatinating" ++ (show a) ++ " and " ++ (show b)
 
 
 divideTextLine :: [DividedContent String] -> String -> [DividedContent String]
 divideTextLine  [] (c:command)
               | isSpace c = divideTextLine [] command
               | isDigit c = divideTextLine [Num [c]] command 
+              | c == '.' = divideTextLine [Num [c]] command 
               | isLetter c = divideTextLine [Var [c]] command 
               | c `elem` "-("  = divideTextLine [Sign [c],  Null] command  
               | otherwise = throw $ InvalidCommand ("Wrong symbol: " ++ [c])
@@ -81,6 +78,7 @@ divideTextLine  [] (c:command)
 divideTextLine result (c:command) 
               | isSpace c = divideTextLine result command
               | isDigit c = divideTextLine (init result ++ [(last result .++ Num [c])]) command
+              | c == '.' = divideTextLine (init result ++ [(last result .++ Num [c])]) command
               | isLetter c = divideTextLine (init result ++ [(last result .++ Var [c])]) command 
               | c `elem` "+-*/()"  = divideTextLine (result ++ [Sign [c]] ++ [Null]) command 
               | otherwise = throw $ InvalidCommand ("Wrong symbol: " ++ [c])
