@@ -1,9 +1,7 @@
 SimpleCalc
 ==========
 
-Simple string calculator. 
-
-Does't work yet
+Simple console calculator. 
 
 For build run:
 
