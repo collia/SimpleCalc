@@ -136,11 +136,6 @@ dividedCommandToTree (Oper a EmptyTree right) ((SubtreeParent commands): other) 
 
 
 dividedCommandToTreeTest = do
-                           --print $  divideTextLine  [] "(((3+4)*3+2)*2+1)*3"
-                           --print $  (  groupDividedCommand [] . divideTextLine  []) "(((3+4)*3+2)*2+1)*3"
-                           --print $  (  dividedCommandToTree EmptyTree . fst . groupDividedCommand [] . divideTextLine  []) "(((3+4)*3+2)*2+1)*3"
-                           --print $  (   fst . groupDividedCommand [] . divideTextLine  []) "(3+4)"
-                           --print $  (  dividedCommandToTree EmptyTree . fst . groupDividedCommand [] . divideTextLine  []) "(3+4)"
                            print $ show $ Plus > Minus
                            print $  (  groupDividedCommand [] . divideTextLine  []) "0-3+4"
                            print $  (  groupDividedCommand [] . divideTextLine  []) "-3+4"
