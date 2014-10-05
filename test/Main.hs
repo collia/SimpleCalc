@@ -274,10 +274,42 @@ exceptionTest4 = do
                     :: IO (Either InvalidCommand (Maybe NumberType))
                case result of
                     Left exception -> assertFailure "Exception"
-                    Right value -> assertBool (show value) True 
+                    Right Nothing -> assertBool "returned Nothing" True 
+                    Right value ->  assertFailure $ "Returns value " ++ (show value)
+exceptionTest5 :: Assertion
+exceptionTest5 = do
+               result <- try $ evaluate $ calculateLine "2+"
+                    :: IO (Either InvalidCommand (Maybe NumberType))
+               case result of
+                    Left exception -> assertFailure "Exception on 2+"
+                    Right Nothing -> assertBool "returned Nothing" True -- has to be Nothing
+                    Right value ->  assertFailure $ "Returns value " ++ (show value)
+exceptionTest6 :: Assertion
+exceptionTest6 = do
+               result <- try $ evaluate $ calculateLine "+2"
+                    :: IO (Either InvalidCommand (Maybe NumberType))
+               case result of
+                    Left exception -> assertBool (show exception) True
+                    Right value -> assertFailure "No exception +2"
+exceptionTest7 :: Assertion
+exceptionTest7 = do
+               result <- try $ evaluate $ calculateLine "1*(2+3"
+                    :: IO (Either InvalidCommand (Maybe NumberType))
+               case result of
+                    Left exception -> assertFailure "Exception 1*(2+3"
+                    Right (Just 5) -> assertBool "Correct answer: 5" True
+                    Right value -> assertFailure $ "Incorrect value: " ++ (show value)
+exceptionTest8 :: Assertion
+exceptionTest8 = do
+               result <- try $ evaluate $ calculateLine "1* 2+3)"
+                    :: IO (Either InvalidCommand (Maybe NumberType))
+               case result of
+                    Left exception -> assertBool (show exception) True
+                    Right value -> assertFailure "No exception 1* 2+3)"
 
 exceptionTests = [testCase "exceptionTest1" exceptionTest1, testCase "exceptionTest2" exceptionTest2, testCase "exceptionTest3" exceptionTest3, 
-                  testCase "exceptionTest4" exceptionTest4]
+                  testCase "exceptionTest4" exceptionTest4, testCase "exceptionTest5" exceptionTest5, testCase "exceptionTest6" exceptionTest6,
+                  testCase "exceptionTest7" exceptionTest7, testCase "exceptionTest8" exceptionTest8]
 
 fractionalTest1 = assertEqual "1.5 + 1.5"
                    (Just 3)

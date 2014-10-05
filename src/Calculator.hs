@@ -146,11 +146,14 @@ dividedCommandToTreeTest = do
                            print $  (  groupDividedCommand [] . divideTextLine  []) "-3+4"
                            print $  (  dividedCommandToTree EmptyTree . fst . groupDividedCommand [] . divideTextLine  []) "0-3+4"
                            print $  (  dividedCommandToTree EmptyTree . fst . groupDividedCommand [] . divideTextLine  []) "-3+4"
+                           print $  (  groupDividedCommand [] . divideTextLine  []) "1*2+3)"
+
+                           print $  (  dividedCommandToTree EmptyTree . fst . groupDividedCommand [] . divideTextLine  []) "1+2)*3)"
 
 mainTest = do
          print $ (calcTree . dividedCommandToTree EmptyTree . fst . groupDividedCommand [] . divideTextLine []) "1+2"
          print $ (calcTree . dividedCommandToTree EmptyTree . fst . groupDividedCommand [] . divideTextLine []) "(((3+4)*3+2)*2+1)*3" 
-         --print $ try ((calcTree . dividedCommandToTree EmptyTree . fst . groupDividedCommand [] . divideTextLine []) "1 / 0")
+         print $ (calcTree . dividedCommandToTree EmptyTree . fst . groupDividedCommand [] . divideTextLine []) "1*2+3)" 
 
 
 

@@ -33,11 +33,11 @@ mainLoop = forever $ do
 
 main :: IO()
 main = 
-     mainLoop
+     --mainLoop
      --calcTreeTest
     -- divideTextLineTest
-     --dividedCommandToTreeTest
-    --mainTest
+     dividedCommandToTreeTest
+     --mainTest
     
 
 
